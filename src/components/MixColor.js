@@ -7,7 +7,7 @@ function MixColor() {
   const location = useLocation();
   const [mixProgress, setMixProgress] = useState(0); // 混ざり具合
   const colors = location.state?.colors || ["#FF0000", "#0000FF"]; // デフォルトの2色
-  const shakeThreshold = 40; // 振る閾値（調整可能）
+  const shakeThreshold = 50; // 振る閾値（調整可能）
 
   // 色をブレンドする関数
   const blendColors = (color1, color2, progress) => {
@@ -57,15 +57,12 @@ function MixColor() {
       requestPermission(); // Chrome
     }
 
+    // 上下動作を検出する関数
     const handleShake = (event) => {
       const acceleration = event.acceleration || {};
-      const magnitude = Math.sqrt(
-        (acceleration.x || 0) ** 2 +
-        (acceleration.y || 0) ** 2 +
-        (acceleration.z || 0) ** 2
-      );
-
-      if (magnitude > shakeThreshold) {
+      const z = acceleration.z || 0; // z軸の加速度を取得（上下方向）
+      
+      if (Math.abs(z) > shakeThreshold) {
         setMixProgress((prev) => Math.min(prev + 10, 100));
       }
     };
@@ -96,7 +93,7 @@ function MixColor() {
       >
         START
       </div>
-      <p>スマホを振って色を混ぜてください！</p>
+      <p>スマホを上下に振って色を混ぜてください！</p>
       <button
         className={`start-button ${mixProgress >= 100 ? "active" : ""}`}
         onClick={handleClick}
