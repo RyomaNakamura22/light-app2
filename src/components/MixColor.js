@@ -7,9 +7,7 @@ function MixColor() {
   const location = useLocation();
   const [mixProgress, setMixProgress] = useState(0); // 混ざり具合
   const colors = location.state?.colors || ["#FF0000", "#0000FF"]; // デフォルトの2色
-  const shakeThreshold = 15; // 振る動作の閾値（調整可能）
-  const [lastAcceleration, setLastAcceleration] = useState({ x: 0, y: 0 });
-  const [shakeCooldown, setShakeCooldown] = useState(false); // 振り判定のクールダウン
+  const shakeThreshold = 40; // 振る閾値（調整可能）
 
   // 色をブレンドする関数
   const blendColors = (color1, color2, progress) => {
@@ -29,17 +27,13 @@ function MixColor() {
   };
 
   useEffect(() => {
+    // 加速度センサーの使用許可をリクエスト
     const requestPermission = async () => {
-      if (
-        typeof DeviceMotionEvent !== "undefined" &&
-        typeof DeviceMotionEvent.requestPermission === "function"
-      ) {
+      if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
         try {
           const permission = await DeviceMotionEvent.requestPermission();
           if (permission !== "granted") {
             alert("加速度センサーの使用が許可されませんでした。");
-          } else {
-            console.log("加速度センサーの使用が許可されました。");
           }
         } catch (error) {
           console.error("加速度センサーの使用許可リクエスト中にエラー:", error);
@@ -47,6 +41,7 @@ function MixColor() {
       }
     };
 
+    // Safari用クリックイベントリスナー
     const addSafariPermissionListener = () => {
       const handleClick = () => {
         requestPermission();
@@ -55,36 +50,21 @@ function MixColor() {
       window.addEventListener("click", handleClick);
     };
 
-    if (
-      navigator.userAgent.includes("Safari") &&
-      !navigator.userAgent.includes("Chrome")
-    ) {
+    // SafariかChromeを判定してリクエスト処理
+    if (navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome")) {
       addSafariPermissionListener(); // Safari
     } else {
       requestPermission(); // Chrome
     }
 
+    // 上下動作を検出する関数
     const handleShake = (event) => {
       const acceleration = event.acceleration || {};
-      const { x = 0, y = 0 } = acceleration;
-
-      // x, y軸の変化量を計算
-      const deltaX = Math.abs(x - lastAcceleration.x);
-      const deltaY = Math.abs(y - lastAcceleration.y);
-
-      console.log("Acceleration:", { x, y, deltaX, deltaY });
-
-      // 縦振り・斜め振り判定 (xとyのどちらかが閾値を超える)
-      if (!shakeCooldown && (deltaX > shakeThreshold || deltaY > shakeThreshold)) {
-        console.log("振り検出!");
-        setMixProgress((prev) => Math.min(prev + 10, 100)); // プログレスを更新
-        setShakeCooldown(true); // クールダウンを開始
-
-        // クールダウン期間を設定 (300ms)
-        setTimeout(() => setShakeCooldown(false), 300);
+      const z = acceleration.z || 0; // z軸の加速度を取得（上下方向）
+      
+      if (Math.abs(z) > shakeThreshold) {
+        setMixProgress((prev) => Math.min(prev + 10, 100));
       }
-
-      setLastAcceleration({ x, y });
     };
 
     window.addEventListener("devicemotion", handleShake);
@@ -92,7 +72,7 @@ function MixColor() {
     return () => {
       window.removeEventListener("devicemotion", handleShake);
     };
-  }, [lastAcceleration, shakeCooldown]);
+  }, []);
 
   const blendedColor = blendColors(colors[0], colors[1], mixProgress);
 
@@ -113,7 +93,7 @@ function MixColor() {
       >
         START
       </div>
-      <p>スマホを上下に振って色を完成させよう</p>
+      <p>スマホを上下に振って色を混ぜてください！</p>
       <button
         className={`start-button ${mixProgress >= 100 ? "active" : ""}`}
         onClick={handleClick}
