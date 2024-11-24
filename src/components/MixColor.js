@@ -7,9 +7,9 @@ function MixColor() {
   const location = useLocation();
   const [mixProgress, setMixProgress] = useState(0); // 混ざり具合
   const colors = location.state?.colors || ["#FF0000", "#0000FF"]; // デフォルトの2色
-  const shakeThreshold = 10; // 振る閾値
+  const shakeThreshold = 20; // 振る閾値（調整可能）
 
-  // 色をブレンドする
+  // 色をブレンドする関数
   const blendColors = (color1, color2, progress) => {
     const hexToRgb = (hex) =>
       hex
@@ -57,13 +57,15 @@ function MixColor() {
       requestPermission(); // Chrome
     }
 
-    // 加速度センサーのイベントハンドリング
     const handleShake = (event) => {
       const acceleration = event.acceleration || {};
-      if (
-        Math.abs(acceleration.x) > shakeThreshold ||
-        Math.abs(acceleration.y) > shakeThreshold
-      ) {
+      const magnitude = Math.sqrt(
+        (acceleration.x || 0) ** 2 +
+        (acceleration.y || 0) ** 2 +
+        (acceleration.z || 0) ** 2
+      );
+
+      if (magnitude > shakeThreshold) {
         setMixProgress((prev) => Math.min(prev + 10, 100));
       }
     };
@@ -75,11 +77,11 @@ function MixColor() {
     };
   }, []);
 
-  const mixedColor = blendColors(colors[0], colors[1], mixProgress);
+  const blendedColor = blendColors(colors[0], colors[1], mixProgress);
 
   const handleClick = () => {
     if (mixProgress >= 100) {
-      navigate("/throw-color", { state: { mixedColor } });
+      navigate("/throw-color", { state: { mixedColor: blendedColor } });
     }
   };
 
@@ -89,9 +91,7 @@ function MixColor() {
         className="loading-text"
         style={{
           "--progress": `${mixProgress}%`,
-          "--color1": colors[0],
-          "--color2": colors[1],
-          "--blended-color": mixedColor,
+          "--blended-color": blendedColor,
         }}
       >
         START
