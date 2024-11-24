@@ -7,7 +7,7 @@ function MixColor() {
   const location = useLocation();
   const [mixProgress, setMixProgress] = useState(0); // 混ざり具合
   const colors = location.state?.colors || ["#FF0000", "#0000FF"]; // デフォルトの2色
-  const shakeThreshold = 30; // 振る動作の閾値（調整可能）
+  const shakeThreshold = 12; // 振る動作の閾値（調整可能）
   const [lastAcceleration, setLastAcceleration] = useState({ x: 0, y: 0 });
   const [shakeCooldown, setShakeCooldown] = useState(false); // 振り判定のクールダウン
 
