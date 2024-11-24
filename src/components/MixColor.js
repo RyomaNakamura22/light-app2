@@ -7,7 +7,7 @@ function MixColor() {
   const location = useLocation();
   const [mixProgress, setMixProgress] = useState(0); // 混ざり具合
   const colors = location.state?.colors || ["#FF0000", "#0000FF"]; // デフォルトの2色
-  const shakeThreshold = 12; // 振る動作の閾値（調整可能）
+  const shakeThreshold = 15; // 振る動作の閾値（調整可能）
   const [lastAcceleration, setLastAcceleration] = useState({ x: 0, y: 0 });
   const [shakeCooldown, setShakeCooldown] = useState(false); // 振り判定のクールダウン
 
@@ -29,7 +29,6 @@ function MixColor() {
   };
 
   useEffect(() => {
-    // 加速度センサーの使用許可をリクエスト
     const requestPermission = async () => {
       if (
         typeof DeviceMotionEvent !== "undefined" &&
@@ -39,6 +38,8 @@ function MixColor() {
           const permission = await DeviceMotionEvent.requestPermission();
           if (permission !== "granted") {
             alert("加速度センサーの使用が許可されませんでした。");
+          } else {
+            console.log("加速度センサーの使用が許可されました。");
           }
         } catch (error) {
           console.error("加速度センサーの使用許可リクエスト中にエラー:", error);
@@ -46,7 +47,6 @@ function MixColor() {
       }
     };
 
-    // Safari用クリックイベントリスナー
     const addSafariPermissionListener = () => {
       const handleClick = () => {
         requestPermission();
@@ -55,7 +55,6 @@ function MixColor() {
       window.addEventListener("click", handleClick);
     };
 
-    // SafariかChromeを判定してリクエスト処理
     if (
       navigator.userAgent.includes("Safari") &&
       !navigator.userAgent.includes("Chrome")
@@ -65,7 +64,6 @@ function MixColor() {
       requestPermission(); // Chrome
     }
 
-    // 振る動作の検出ロジック
     const handleShake = (event) => {
       const acceleration = event.acceleration || {};
       const { x = 0, y = 0 } = acceleration;
@@ -74,8 +72,11 @@ function MixColor() {
       const deltaX = Math.abs(x - lastAcceleration.x);
       const deltaY = Math.abs(y - lastAcceleration.y);
 
+      console.log("Acceleration:", { x, y, deltaX, deltaY });
+
       // 縦振り・斜め振り判定 (xとyのどちらかが閾値を超える)
       if (!shakeCooldown && (deltaX > shakeThreshold || deltaY > shakeThreshold)) {
+        console.log("振り検出!");
         setMixProgress((prev) => Math.min(prev + 10, 100)); // プログレスを更新
         setShakeCooldown(true); // クールダウンを開始
 
@@ -83,7 +84,6 @@ function MixColor() {
         setTimeout(() => setShakeCooldown(false), 300);
       }
 
-      // 現在の加速度を保存
       setLastAcceleration({ x, y });
     };
 
