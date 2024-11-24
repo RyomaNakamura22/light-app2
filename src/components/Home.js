@@ -1,12 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "../styles/global.css"; // 必要に応じてスタイルを調整
 
 function Home() {
+  const navigate = useNavigate();
+
+  const handleOkClick = () => {
+    navigate("/create-color"); // 次の画面に遷移
+  };
+
   return (
-    <div className="screen">
-      <h1>Lighting App</h1>
-      <p>スマホで色を作り、照明を操作するアプリです。</p>
-      <Link to="/create-color" className="btn">色を作る</Link>
+    <div className="home-screen">
+      <div className="text-container">
+        <p>１：２つの色を選択して自分だけの色を作ろう！</p>
+        <p>２：ライトに向かって自分の色を投げてみよう！</p>
+      </div>
+      <button className="ok-button" onClick={handleOkClick}>
+        OK
+      </button>
     </div>
   );
 }

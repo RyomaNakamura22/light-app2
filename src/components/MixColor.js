@@ -1,48 +1,70 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import "../styles/MixColor.css";
 
 function MixColor() {
   const navigate = useNavigate();
- 
-  const [mixProgress, setMixProgress] = useState(0);
-  const [acceleration, setAcceleration] = useState({ x: 0, y: 0, z: 0 }); // 加速度を表示用
-  const shakeThreshold = 10;
+  const location = useLocation();
+  const [mixProgress, setMixProgress] = useState(0); // 混ざり具合
+  const colors = location.state?.colors || ["#FF0000", "#0000FF"]; // デフォルトの2色
+  const shakeThreshold = 10; // 振る閾値
+
+  // 色をブレンドする
+  const blendColors = (color1, color2, progress) => {
+    const hexToRgb = (hex) =>
+      hex
+        .replace("#", "")
+        .match(/.{1,2}/g)
+        .map((x) => parseInt(x, 16));
+    const rgbToHex = ([r, g, b]) =>
+      `#${[r, g, b].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
+    const rgb1 = hexToRgb(color1);
+    const rgb2 = hexToRgb(color2);
+    const blended = rgb1.map((c, i) =>
+      Math.floor(c + (rgb2[i] - c) * (progress / 100))
+    );
+    return rgbToHex(blended);
+  };
 
   useEffect(() => {
-    // センサーの許可をリクエスト（必要なら）
-    if (typeof DeviceMotionEvent.requestPermission === "function") {
-      DeviceMotionEvent.requestPermission()
-        .then((response) => {
-          if (response === "granted") {
-            console.log("センサーの使用が許可されました");
-          } else {
-            alert("センサーの使用を許可してください！");
+    // 加速度センサーの使用許可をリクエスト
+    const requestPermission = async () => {
+      if (typeof DeviceMotionEvent !== "undefined" && typeof DeviceMotionEvent.requestPermission === "function") {
+        try {
+          const permission = await DeviceMotionEvent.requestPermission();
+          if (permission !== "granted") {
+            alert("加速度センサーの使用が許可されませんでした。");
           }
-        })
-        .catch((error) => {
-          console.error("センサーの許可リクエストに失敗しました:", error);
-        });
+        } catch (error) {
+          console.error("加速度センサーの使用許可リクエスト中にエラー:", error);
+        }
+      }
+    };
+
+    // Safari用クリックイベントリスナー
+    const addSafariPermissionListener = () => {
+      const handleClick = () => {
+        requestPermission();
+        window.removeEventListener("click", handleClick);
+      };
+      window.addEventListener("click", handleClick);
+    };
+
+    // SafariかChromeを判定してリクエスト処理
+    if (navigator.userAgent.includes("Safari") && !navigator.userAgent.includes("Chrome")) {
+      addSafariPermissionListener(); // Safari
     } else {
-      console.log("センサーの許可リクエストは不要です");
+      requestPermission(); // Chrome
     }
-  }, []);
 
-  useEffect(() => {
+    // 加速度センサーのイベントハンドリング
     const handleShake = (event) => {
-      const { x, y, z } = event.acceleration || {};
-      setAcceleration({
-        x: x ? x.toFixed(2) : 0,
-        y: y ? y.toFixed(2) : 0,
-        z: z ? z.toFixed(2) : 0,
-      }); // 加速度を更新
-
-      // 振る動作の検出
+      const acceleration = event.acceleration || {};
       if (
-        Math.abs(x) > shakeThreshold ||
-        Math.abs(y) > shakeThreshold ||
-        Math.abs(z) > shakeThreshold
+        Math.abs(acceleration.x) > shakeThreshold ||
+        Math.abs(acceleration.y) > shakeThreshold
       ) {
-        setMixProgress((prev) => Math.min(prev + 10, 100)); // 進捗を更新
+        setMixProgress((prev) => Math.min(prev + 10, 100));
       }
     };
 
@@ -53,27 +75,35 @@ function MixColor() {
     };
   }, []);
 
-  useEffect(() => {
+  const mixedColor = blendColors(colors[0], colors[1], mixProgress);
+
+  const handleClick = () => {
     if (mixProgress >= 100) {
-      navigate("/throw-color", { state: { mixedColor: "purple" } });
+      navigate("/throw-color", { state: { mixedColor } });
     }
-  }, [mixProgress, navigate]);
+  };
 
   return (
-    <div className="screen">
-      <h2>スマホを振って色を混ぜてください</h2>
-      <div className="progress-bar">
-        <div
-          className="progress"
-          style={{ width: `${mixProgress}%`, backgroundColor: "purple" }}
-        ></div>
+    <div className="mix-color-screen">
+      <div
+        className="loading-text"
+        style={{
+          "--progress": `${mixProgress}%`,
+          "--color1": colors[0],
+          "--color2": colors[1],
+          "--blended-color": mixedColor,
+        }}
+      >
+        START
       </div>
-      <div className="debug-info">
-        <h3>加速度センサーデータ</h3>
-        <p>X軸: {acceleration.x}</p>
-        <p>Y軸: {acceleration.y}</p>
-        <p>Z軸: {acceleration.z}</p>
-      </div>
+      <p>スマホを振って色を混ぜてください！</p>
+      <button
+        className={`start-button ${mixProgress >= 100 ? "active" : ""}`}
+        onClick={handleClick}
+        disabled={mixProgress < 100}
+      >
+        START
+      </button>
     </div>
   );
 }
