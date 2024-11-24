@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function MixColor() {
   const navigate = useNavigate();
-  const location = useLocation();
+ 
   const [mixProgress, setMixProgress] = useState(0);
   const [acceleration, setAcceleration] = useState({ x: 0, y: 0, z: 0 }); // 加速度を表示用
   const shakeThreshold = 10;
