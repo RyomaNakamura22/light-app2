@@ -5,6 +5,7 @@ import CreateColor from "./components/CreateColor";
 import MixColor from "./components/MixColor";
 import ThrowColor from "./components/ThrowColor";
 import Complete from "./components/Complete";
+
 import "./styles.css";
 
 function App() {
