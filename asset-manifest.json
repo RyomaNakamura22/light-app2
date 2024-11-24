@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/light-app2/static/css/main.19c0a972.css",
+    "main.js": "/light-app2/static/js/main.b1f0c976.js",
+    "static/js/453.fdfd817c.chunk.js": "/light-app2/static/js/453.fdfd817c.chunk.js",
+    "index.html": "/light-app2/index.html",
+    "main.19c0a972.css.map": "/light-app2/static/css/main.19c0a972.css.map",
+    "main.b1f0c976.js.map": "/light-app2/static/js/main.b1f0c976.js.map",
+    "453.fdfd817c.chunk.js.map": "/light-app2/static/js/453.fdfd817c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.19c0a972.css",
+    "static/js/main.b1f0c976.js"
+  ]
+}
