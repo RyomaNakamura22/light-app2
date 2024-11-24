@@ -5,15 +5,27 @@ function MixColor() {
   const navigate = useNavigate();
   const location = useLocation();
   const [mixProgress, setMixProgress] = useState(0);
-  const [acceleration, setAcceleration] = useState({ x: 0, y: 0, z: 0 }); //加速度値を表示するための状態
-
-  const shakeThreshold = 10; //振動の閾値
-  const [colors] = useState(location.state?.colors || []);
+  const [acceleration, setAcceleration] = useState({ x: 0, y: 0, z: 0 }); // 加速度を表示用
+  const shakeThreshold = 10;
 
   useEffect(() => {
-    console.log("選択された色:", colors);
-  }, [colors]);
-
+    // センサーの許可をリクエスト（必要なら）
+    if (typeof DeviceMotionEvent.requestPermission === "function") {
+      DeviceMotionEvent.requestPermission()
+        .then((response) => {
+          if (response === "granted") {
+            console.log("センサーの使用が許可されました");
+          } else {
+            alert("センサーの使用を許可してください！");
+          }
+        })
+        .catch((error) => {
+          console.error("センサーの許可リクエストに失敗しました:", error);
+        });
+    } else {
+      console.log("センサーの許可リクエストは不要です");
+    }
+  }, []);
 
   useEffect(() => {
     const handleShake = (event) => {
@@ -22,13 +34,15 @@ function MixColor() {
         x: x ? x.toFixed(2) : 0,
         y: y ? y.toFixed(2) : 0,
         z: z ? z.toFixed(2) : 0,
-      }); //加速度を状態にセット
+      }); // 加速度を更新
 
+      // 振る動作の検出
       if (
         Math.abs(x) > shakeThreshold ||
-        Math.abs(y) > shakeThreshold
+        Math.abs(y) > shakeThreshold ||
+        Math.abs(z) > shakeThreshold
       ) {
-        setMixProgress((prev) => Math.min(prev + 10, 100)); //振動で進捗を増加
+        setMixProgress((prev) => Math.min(prev + 10, 100)); // 進捗を更新
       }
     };
 
