@@ -1,0 +1,92 @@
+/* 全体スタイル */
+.create-color-screen {
+    background-color: black;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* 二重回転コンテナ */
+  .double-circle-container {
+    position: relative;
+    width: 400px;
+    height: 400px;
+  }
+  
+  /* 内側と外側の円のスタイル */
+  .circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+  }
+  
+  /* 回転アニメーション */
+  .inner-circle {
+    animation: rotation 20s linear infinite; /* 時計回り */
+  }
+  
+  .outer-circle {
+    animation: rotation 20s linear infinite reverse; /* 反時計回り */
+  }
+  
+  /* カラーボールスタイル用 */
+  .rotating-ball {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  /* 選択されたボールに縁を付ける */
+  .rotating-ball.selected {
+    border: 3px solid white;
+  }
+  
+  /* 回転アニメーション */
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* 次へボタン */
+  .next-button {
+    background-color: #f0f0f0;
+    color: black;
+    border: none;
+    padding: 15px 30px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  /* ボールが選択されたら表示 */
+  .next-button.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+  
+  .next-button:hover {
+    background-color: #d9d9d9;
+  }
+  

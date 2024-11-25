@@ -5,9 +5,9 @@ import "../styles/CreateColor.css";
 
 function CreateColor() {
   const navigate = useNavigate();
-  const [selectedColors, setSelectedColors] = useState([]); // 選択した色を管理
+  const [selectedColors, setSelectedColors] = useState([]); //選択した色を管理
 
-  // LEDで表現しやすい20色
+  //20色
   const colors = [
     "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF",
     "#00FFFF", "#FF8000", "#8000FF", "#80FF00", "#00FF80",
@@ -19,7 +19,7 @@ function CreateColor() {
     if (selectedColors.includes(color)) {
       setSelectedColors(selectedColors.filter((c) => c !== color)); // 選択を解除
     } else if (selectedColors.length < 2) {
-      setSelectedColors([...selectedColors, color]); // 新しい色を追加
+      setSelectedColors([...selectedColors, color]); //新しい色追加
     }
   };
 

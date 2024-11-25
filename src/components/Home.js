@@ -1,12 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/global.css"; // 必要に応じてスタイルを調整
+import "../styles/global.css"; 
 
 function Home() {
   const navigate = useNavigate();
 
   const handleOkClick = () => {
-    navigate("/create-color"); // 次の画面に遷移
+    navigate("/create-color"); 
   };
 
   return (

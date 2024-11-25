@@ -48,128 +48,37 @@ body {
   }
 
   .home-screen {
-    background-color: black; /* 黒背景 */
-    color: white; /* 白い文字 */
-    height: 100vh; /* 画面全体をカバー */
+    background-color: black; 
+    color: white; 
+    height: 100vh; 
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 上下の要素を分離 */
-    align-items: center; /* 中央揃え */
-    padding: 20px; /* 少し余白を追加 */
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 20px; 
   }
   
   .text-container {
-    text-align: Light; /* テキストを中央揃え */
-    margin-top: 200px; /* テキストを画面の中央に配置 */
+    text-align: Light; 
+    margin-top: 200px; 
     font-size: 20px;
     font-weight: bold;
     letter-spacing: 5px;
   }
   
   .ok-button {
-    background-color: #f0f0f0; /* 薄いグレー */
+    background-color: #f0f0f0; 
     color: black;
     border: none;
     padding: 15px 70px;
     font-size: 16px;
     font-weight: bold;
-    border-radius: 5px; /* 角を丸くする */
+    border-radius: 5px; 
     cursor: pointer;
-    margin-bottom: 50px; /* 下部にスペースを確保 */
+    margin-bottom: 50px; 
   }
   
   .ok-button:hover {
-    background-color: #d9d9d9; /* ボタンを少し暗くする */
+    background-color: #d9d9d9; 
   }
   
-/* 全体のスタイル */
-.create-color-screen {
-  background-color: black;
-  color: white;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-}
-
-.header {
-  text-align: center;
-  margin-top: 20px;
-}
-
-/* 二重の回転コンテナ */
-.double-circle-container {
-  position: relative;
-  width: 400px;
-  height: 400px;
-}
-
-/* 内側と外側の円のスタイル */
-.circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-}
-
-/* 回転アニメーション */
-.inner-circle {
-  animation: rotation 20s linear infinite; /* 時計回り */
-}
-
-.outer-circle {
-  animation: rotation 20s linear infinite reverse; /* 反時計回り */
-}
-
-/* カラーボールのスタイル */
-.rotating-ball {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-/* 選択されたボールに縁を付ける */
-.rotating-ball.selected {
-  border: 3px solid white;
-}
-
-/* 回転アニメーション */
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-/* 次へボタン */
-.next-button {
-  background-color: #f0f0f0;
-  color: black;
-  border: none;
-  padding: 15px 30px;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 20px;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-/* 次へボタンが選択されたら表示 */
-.next-button.visible {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.next-button:hover {
-  background-color: #d9d9d9;
-}

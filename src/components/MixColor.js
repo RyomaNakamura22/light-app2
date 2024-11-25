@@ -5,12 +5,12 @@ import "../styles/MixColor.css";
 function MixColor() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [mixProgress, setMixProgress] = useState(0); // 混ざり具合
+  const [mixProgress, setMixProgress] = useState(0); //色の混ざり具合
   const colors = location.state?.colors || ["#FF0000", "#0000FF"]; // デフォルトの2色
-  const shakeThreshold = 40; // 振る閾値（調整可能）
-  const [cooldown, setCooldown] = useState(false); // クールダウンフラグ
+  const shakeThreshold = 40; //加速度センサーの閾値
+  const [cooldown, setCooldown] = useState(false); //クールダウンフラグ
 
-  // 色をブレンドする関数
+  //色を混ぜる関数
   const blendColors = (color1, color2, progress) => {
     const hexToRgb = (hex) =>
       hex
@@ -56,23 +56,23 @@ function MixColor() {
       navigator.userAgent.includes("Safari") &&
       !navigator.userAgent.includes("Chrome")
     ) {
-      addSafariPermissionListener(); // Safari
+      addSafariPermissionListener(); //Safari用許可
     } else {
-      requestPermission(); // Chrome
+      requestPermission(); //Chrome用
     }
 
     const handleShake = (event) => {
       const acceleration = event.acceleration || {};
-      const y = acceleration.y || 0; // Y軸の加速度を取得（上下方向）
+      const y = acceleration.y || 0; //Y軸の加速度を取得
 
       console.log("加速度 (Y軸):", y);
 
       if (!cooldown && Math.abs(y) > shakeThreshold) {
         console.log("振り検出:", y);
-        setMixProgress((prev) => Math.min(prev + 10, 100)); // プログレスを更新
-        setCooldown(true); // クールダウンを開始
+        setMixProgress((prev) => Math.min(prev + 10, 100)); //プログレス更新
+        setCooldown(true); //クールダウン開始
 
-        // ディレイを300ms設定
+        //delay300ms
         setTimeout(() => setCooldown(false), 300);
       }
     };
