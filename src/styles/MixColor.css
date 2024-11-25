@@ -3,11 +3,19 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     color: rgb(255, 255, 255);
     background-color: black;
   }
+
+  .MixColor-header {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+
   
   /* STARTテキスト */
   .loading-text {
@@ -27,35 +35,31 @@
     transition: background-size 0.3s ease;
   }
   
-  /* ボタンスタイル */
-  .start-button {
-    margin-top: 20px;
-    padding: 15px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    color: black;
-    background-color: #f0f0f0;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    opacity: 0.5;
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  
-  .start-button:enabled {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  
-  .start-button:hover {
-    background-color: #d9d9d9;
-    transform: scale(1.1);
-  }
-  
-  .start-button.active {
-    animation: glow 1.5s infinite alternate;
-  }
+  /* ボタンのスタイル */
+.start-button {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 15px 30px;
+  color: black;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none; /* 初期状態で無効化 */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.start-button.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.start-button:hover {
+  background-color: #d9d9d9;
+}
   
   @keyframes glow {
     from {

@@ -94,6 +94,10 @@ function MixColor() {
 
   return (
     <div className="mix-color-screen">
+      <div className="MixColor-header">
+        <h4>スマホを上下に振って色を完成させましょう</h4>
+        <p>色で満たされたら完成です</p>
+      </div>
       <div
         className="loading-text"
         style={{
@@ -103,9 +107,8 @@ function MixColor() {
       >
         START
       </div>
-      <p>スマホを上下に振って色を完成させましょう</p>
       <button
-        className={`start-button ${mixProgress >= 100 ? "active" : ""}`}
+        className={`start-button ${mixProgress >= 100 ? "visible" : ""}`}
         onClick={handleClick}
         disabled={mixProgress < 100}
       >
